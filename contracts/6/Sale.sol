@@ -14,6 +14,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 contract Sale is ERC20,Pausable,TokenRecover {
 
     using SafeMath for uint256;
+    
     uint256 public saleRate;
     uint256 public launchRate;
     uint256 public commissionRate;
