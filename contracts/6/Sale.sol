@@ -14,7 +14,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 contract Sale is ERC20,Pausable,TokenRecover {
 
     using SafeMath for uint256;
-    
+
     uint256 public saleRate;
     uint256 public launchRate;
     uint256 public commissionRate;
@@ -50,7 +50,7 @@ contract Sale is ERC20,Pausable,TokenRecover {
         _mint(address(this),totalToken);
         uint deadline = block.timestamp+1000;
         _unpause();
-        router.addLiquidity(address(this),WETH,totalToken,address(this).balance,totalToken,address(this).balance,address(0),deadline);
+        router.addLiquidityETH(address(this),totalToken,totalToken,address(this).balance,address(0),deadline);
     }
 
     function redeemCommission() public onlyOwner{
