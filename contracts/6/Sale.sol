@@ -21,11 +21,10 @@ contract Sale is ERC20,Pausable,TokenRecover {
     uint public expiry;
     uint public commissionRedemption;
     uint256 public commission;
-    address public WETH;
     IUniswapV2Router02 router;
 
     constructor (uint256 _saleRate,uint256 _launchRate,uint256 _commissionRate,uint _expiry,
-    uint _commissionRedemption,address _WETH,address _router,string memory _name,string memory _symbol)
+    uint _commissionRedemption,address _router,string memory _name,string memory _symbol)
     ERC20(_name,_symbol) public {
         saleRate = _saleRate;
         launchRate = _launchRate;
@@ -33,7 +32,6 @@ contract Sale is ERC20,Pausable,TokenRecover {
         expiry = _expiry;
         commissionRedemption = _commissionRedemption;
         commission = 0;
-        WETH = _WETH;
         router = IUniswapV2Router02(_router);
         _pause();
     }

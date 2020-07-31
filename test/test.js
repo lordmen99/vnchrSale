@@ -78,10 +78,12 @@ describe("Sale Contract", function() {
     expiryTime = unixTime + expiryPeriod;
     commissionRedemptionTime = unixTime + commissionRedemptionPeriod;
     saleContract = await SaleContract.deploy(saleRate,launchRate,commissionRate,expiryTime,
-      commissionRedemptionTime,weth9.address,uniswapV2Router02.address,"$VNCHR","VNCR");
+      commissionRedemptionTime,uniswapV2Router02.address,"$VNCHR","VNCR");
     await saleContract.deployed();
     console.log("Sale Contract deployed");
 
+    //create WETH/VNCHR pair in advance
+    await uniswapV2Factory.createPair(weth9.address,saleContract.address);
   });
 
   describe("Deployment", function(){
@@ -123,11 +125,6 @@ describe("Sale Contract", function() {
         expect(true).to.equal(true);
       });
 
-      it("WETH address should be correct", async function(){
-        const saleWETH = await saleContract.WETH();
-        expect(saleWETH).to.equal(weth9.address);
-      });
-
       it("Sale Rate should be correct", async function(){
         const contractSaleRate = await saleContract.saleRate();
         expect(contractSaleRate).to.equal(saleRate);
@@ -152,6 +149,16 @@ describe("Sale Contract", function() {
         const contractCommissionRedemptionTime = await saleContract.commissionRedemption();
         expect(contractCommissionRedemptionTime).to.equal(commissionRedemptionTime);
       });
+
+      it("VNCHR/WETH pair should be created by uniswap factory", async function(){
+        const pairAddress = await uniswapV2Factory.getPair(weth9.address,saleContract.address);
+        expect(pairAddress).to.not.equal("0x0000000000000000000000000000000000000000");
+        const pairContract = await ethers.getContractAt("UniswapV2Pair",pairAddress);
+        //any method will do
+        const pairFactory = await pairContract.factory();
+        expect(uniswapV2Factory.address).to.equal(pairFactory);
+      });
+
     });
 
   });
