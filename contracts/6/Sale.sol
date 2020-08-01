@@ -6,10 +6,16 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts//utils/Pausable.sol";
 //IMPORT TOKENRECOVER
 import "eth-token-recover/contracts/TokenRecover.sol";
-//IMPORT UNISWAP ROUTER
-import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 //IMPORT SAFEMATH
 import "@openzeppelin/contracts/math/SafeMath.sol";
+//IMPORT PAIR
+import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
+//IMPORT FACTORY
+import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
+//IMPORT WETH
+import "@uniswap/v2-periphery/contracts/interfaces/IWETH.sol";
+//IMPORT SAFE TRANSFER HELPER
+import "@uniswap/lib/contracts/libraries/TransferHelper.sol";
 
 contract Sale is ERC20,Pausable,TokenRecover {
 
@@ -21,10 +27,11 @@ contract Sale is ERC20,Pausable,TokenRecover {
     uint public expiry;
     uint public commissionRedemption;
     uint256 public commission;
-    IUniswapV2Router02 router;
+    address pair;
+    address WETH;
 
     constructor (uint256 _saleRate,uint256 _launchRate,uint256 _commissionRate,uint _expiry,
-    uint _commissionRedemption,address _router,string memory _name,string memory _symbol)
+    uint _commissionRedemption,address _factory,address _WETH, string memory _name,string memory _symbol)
     ERC20(_name,_symbol) public {
         saleRate = _saleRate;
         launchRate = _launchRate;
@@ -32,7 +39,10 @@ contract Sale is ERC20,Pausable,TokenRecover {
         expiry = _expiry;
         commissionRedemption = _commissionRedemption;
         commission = 0;
-        router = IUniswapV2Router02(_router);
+        WETH = _WETH;
+        //declare factory
+        IUniswapV2Factory factory = IUniswapV2Factory(_factory);
+        pair = factory.createPair(address(this),_WETH);
         _pause();
     }
 
@@ -46,9 +56,12 @@ contract Sale is ERC20,Pausable,TokenRecover {
         commission = commissionRate.mul(address(this).balance);
         uint totalToken = uint(launchRate.mul(address(this).balance));
         _mint(address(this),totalToken);
-        uint deadline = block.timestamp+1000;
         _unpause();
-        router.addLiquidityETH(address(this),totalToken,totalToken,address(this).balance,address(0),deadline);
+        TransferHelper.safeTransfer(address(this), pair, totalToken);
+        uint256 balance = address(this).balance;
+        IWETH(WETH).deposit{value: balance}();
+        assert(IWETH(WETH).transfer(pair, balance));
+        IUniswapV2Pair(pair).mint(address(0));
     }
 
     function redeemCommission() public onlyOwner{
