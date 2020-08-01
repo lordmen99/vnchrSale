@@ -22,11 +22,6 @@ module.exports = {
     sources: "./contracts/6",
   },
   networks: {
-    localhost: {
-      url: "http://127.0.0.1:8545",
-      gas: "auto",
-      gasMultiplier: 2,
-    },
     buidlerevm: {
       gas: "auto",
       gasMultiplier: 2,
