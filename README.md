@@ -6,8 +6,6 @@ A new type of token sale, where all funds raised are directed into a Uniswap liq
 
 **We're using this to create a brand token for a new line of streetwear**
 
-![Sale Diagram](https://drive.google.com/file/d/1qOAGAMM3JprdpS8tc96c3XuXPR3h8dI-/view?usp=sharing)
-
 ## Sale Process
 
 ### Token Sale
