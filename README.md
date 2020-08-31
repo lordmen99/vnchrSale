@@ -6,6 +6,8 @@ A new type of token sale, where all funds raised are directed into a Uniswap liq
 
 **We're using this to create a brand token for a new line of streetwear**
 
+![Sale Diagram](https://drive.google.com/file/d/1qOAGAMM3JprdpS8tc96c3XuXPR3h8dI-/view?usp=sharing)
+
 ## Sale Process
 
 ### Token Sale
@@ -16,12 +18,12 @@ After the sale expires anyone can call LaunchTrade(). Tokens are unlocked and al
 
 We add liquidity with a lower ratio of project token than offered in the sale - **RAISING THE PRICE BIG TIME!!**
 
-This creates mad hype.
+This creates mad hype. Hype is a key ingredient of streetwear :)
 
 ### Commission Redemption
-After a long period of proving themselves and delivering on promises (e.g. a year) - the team can cash out by calling redeemCommission().
+After a long period of proving themselves and delivering on promises (e.g. a year) - the team can cash out by calling redeemCommission(). This is our take on vesting!
 
-**This prevents scams and incentivises teams to deliver**, because if the project is trash, holders can sell out before the redemption time - leaving the founders with a worthless coin.
+**This prevents scams and incentivises teams to deliver**, because if the project is trash, holders can sell out before the redemption time - leaving the founders with a worthless coin. 
 
 ## Deploying a VN¢HR sale
 ```sol
